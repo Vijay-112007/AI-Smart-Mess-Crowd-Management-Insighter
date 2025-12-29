@@ -23,7 +23,7 @@ class SignIn(Authentication):
         self.user_name = user_name
         self.passcode = passcode
         self.authenticated = False
-    def authentication(self):
+    def sign_in(self):
         #after retreving the login credentials we should check either there exists a user name or not if exists we will 
         #check for the passcode authentication
         #we had created a file in order to store the credentials called as credentials.csv
