@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import pandas as pd
 import csv
 import os
 import datetime
@@ -57,7 +56,30 @@ class SignUp(Authentication):
         #we will create a seed using the user_name + email then use it as seed then generate random number then use that 
         #random number as recovery code
         seed = self.username + self.email
-        self.number = random
+        random.seed(seed)
+        self.number = random.randint(10000,99999)
+        return self.number
+    #this is the recovery codes of the account which is useful for the account forget option
     def sign_up(self):
-        pass
-    
+        #if we need to sign up into the account we need to get
+        #the essential details in order to create the account
+        #first we need to check either the email is already registered or not
+        #so load the file and check for the details
+        currentdir = os.getcwd()
+        path = os.path.join(currentdir,"credentials.csv") 
+        with open(path,"r") as fd:
+            csvreader = csv.reader(fd)
+            header = next(csvreader)
+            for row in csvreader:
+                if row[3].strip() == self.email:
+                    return "Email already Registered"
+        #now if the email isn't registered we need to create means add the details inside the csv file
+        code = self.recovery_code()
+        with open(path,"a") as fd:
+            time = str(datetime.datetime.now())
+            details = time + ","+self.username+","+self.passcode+","+self.email+","+code
+            csvwriter = csv.writer(fd)
+            csvwriter.writerow(details)
+        return "Account Successfully Created"
+
+
