@@ -22,6 +22,8 @@ class SignIn(Authentication):
         self.user_name = user_name
         self.passcode = passcode
         self.authenticated = False
+    def sign_up(self):
+        pass
     def sign_in(self):
         #after retreving the login credentials we should check either there exists a user name or not if exists we will 
         #check for the passcode authentication
@@ -51,6 +53,8 @@ class SignUp(Authentication):
         self.passcode = new_passcode
         #logic should be like after intialization ti should be like directly go into the sign_up section without pressing any thing from the user
         self.email = email
+    def sign_in(self):
+        pass
     def recovery_code(self):
         #first we will find the recorvery code then we will create the account
         #we will create a seed using the user_name + email then use it as seed then generate random number then use that 
@@ -77,9 +81,13 @@ class SignUp(Authentication):
         code = self.recovery_code()
         with open(path,"a") as fd:
             time = str(datetime.datetime.now())
-            details = time + ","+self.username+","+self.passcode+","+self.email+","+code
             csvwriter = csv.writer(fd)
-            csvwriter.writerow(details)
+            csvwriter.writerow([time, self.username, self.passcode, self.email,code])
         return "Account Successfully Created"
-
-
+def main():
+    #lets test the current code with the pseodo test cases
+    new_user = SignUp("vijaysai","1234vijay","kattamudivijaysai@gmail.com")
+    message = new_user.sign_up()
+    print(message)
+if __name__ == "__main__":
+    main()
