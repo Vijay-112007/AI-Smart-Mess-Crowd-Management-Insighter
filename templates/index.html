@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Home - AI Smart Mess Crowd Management{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="gradient-text">AI Smart Mess</span>
+            <br>Crowd Management Insighter
+        </h1>
+        <p class="hero-subtitle">
+            Revolutionizing mess management with AI-powered crowd insights and intelligent automation
+        </p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('signin') }}" class="btn btn-primary">Sign In</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-secondary">Get Started</a>
+        </div>
+    </div>
+    <div class="hero-features">
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI-Powered</h3>
+            <p>Smart algorithms for crowd prediction</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Real-time Analytics</h3>
+            <p>Live crowd monitoring and insights</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Optimized Flow</h3>
+            <p>Efficient mess management system</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

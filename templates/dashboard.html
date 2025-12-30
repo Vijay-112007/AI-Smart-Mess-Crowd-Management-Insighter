@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AI Smart Mess{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Welcome, <span class="gradient-text">{{ username }}</span>!</h1>
+        <p>Your AI Smart Mess Dashboard</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-icon">👥</div>
+            <h3>Current Crowd</h3>
+            <div class="card-value">245</div>
+            <p class="card-label">People in mess</p>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-icon">⏰</div>
+            <h3>Peak Time</h3>
+            <div class="card-value">12:30 PM</div>
+            <p class="card-label">Expected rush hour</p>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-icon">📈</div>
+            <h3>Today's Traffic</h3>
+            <div class="card-value">1,247</div>
+            <p class="card-label">Total visitors</p>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-icon">⚡</div>
+            <h3>Wait Time</h3>
+            <div class="card-value">5 min</div>
+            <p class="card-label">Average wait</p>
+        </div>
+    </div>
+    
+    <div class="dashboard-info">
+        <div class="info-card">
+            <h3>🎯 Quick Actions</h3>
+            <div class="action-buttons">
+                <button class="btn btn-secondary">View Analytics</button>
+                <button class="btn btn-secondary">Generate Report</button>
+                <button class="btn btn-secondary">Settings</button>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <h3>📊 Recent Activity</h3>
+            <ul class="activity-list">
+                <li>Peak crowd detected at 12:45 PM</li>
+                <li>System optimization completed</li>
+                <li>New user registration: 15 today</li>
+                <li>Average satisfaction rate: 4.5/5</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
