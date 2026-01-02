@@ -24,7 +24,14 @@ class SignIn(Authentication):
         self.authenticated = False
         self.isadmin = admin
     def sign_up(self):
-        pass
+        email = input("Enter Your Email:")
+        sign_up_instance = SignUp(self.user_name, self.passcode, email, self.isadmin)
+        signup_result = sign_up_instance.sign_up()
+        if "Successfully Created" in signup_result:
+            # After successful signup, sign in
+            return sign_up_instance.sign_in()
+        else:
+            return signup_result
     def sign_in(self):
         #after retreving the login credentials we should check either there exists a user name or not if exists we will 
         #check for the passcode authentication
@@ -71,7 +78,10 @@ class SignUp(Authentication):
         self.email = email
         self.isadmin = admin
     def sign_in(self):
-        pass
+        # Use the SignIn class method with the same username and passcode
+        signin_instance = SignIn(self.username, self.passcode, self.isadmin)
+        sign_in_result = signin_instance.sign_in()
+        return sign_in_result
     def recovery_code(self):
         #first we will find the recorvery code then we will create the account
         #we will create a seed using the user_name + email then use it as seed then generate random number then use that 
