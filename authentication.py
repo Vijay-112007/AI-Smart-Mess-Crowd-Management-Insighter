@@ -18,10 +18,11 @@ class Authentication(ABC):
 #now for the sake of time we will store all the login credentials in a file after we will shift it to the firebase database
 #in this class we need to catch the return messages
 class SignIn(Authentication):
-    def __init__(self,user_name,passcode):
+    def __init__(self,user_name,passcode,admin = 1):
         self.user_name = user_name
         self.passcode = passcode
         self.authenticated = False
+        self.isadmin = admin
     def sign_up(self):
         pass
     def sign_in(self):
@@ -30,29 +31,45 @@ class SignIn(Authentication):
         #we had created a file in order to store the credentials called as credentials.csv
         #first open the file
         currentdir = os.getcwd()
-        path = os.path.join(currentdir,"credentials.csv")
-        with open(path,"r") as fd:
-            csvreader = csv.reader(fd)
-            header = next(csvreader)
+        if self.isadmin == 0:
+            path = os.path.join(currentdir,"credentials.csv")
+            with open(path,"r") as fd:
+                csvreader = csv.reader(fd)
+                header = next(csvreader)
             #now we will check either the name is correct or not
-            for row in csvreader:
-                if len(row) > 1 and row[1] == self.user_name:
-                    # Assuming second column is username, third is password
-                    if len(row) > 2 and row[2] == self.passcode:
-                        self.authenticated = True
-                        return "Authentication Successfull"
-                    else:
-                        return "Incorrect Credentials"  # Username found but password wrong
-            return "Incorrect Credentials" #user name is not correct 
-    #After the authentication we need to catch the messages and the other options are only allowed if the self.authenticated = True
-    pass
+                for row in csvreader:
+                    if len(row) > 1 and row[1] == self.user_name:
+                        # Assuming second column is username, third is password
+                        if len(row) > 2 and row[2] == self.passcode:
+                            self.authenticated = True
+                            return "Authentication Successfull"
+                        else:
+                            return "Incorrect Credentials"  # Username found but password wrong
+                return "Incorrect Credentials" #user name is not correct
+        elif self.isadmin == 1:
+            path = os.path.join(currentdir,"admincred.csv")
+            with open(path,"r") as fd:
+                csvreader = csv.reader(fd)
+                header = next(csvreader)
+            #now we will check either the name is correct or not
+                for row in csvreader:
+                    if len(row) > 1 and row[1] == self.user_name:
+                        # Assuming second column is username, third is password
+                        if len(row) > 2 and row[2] == self.passcode:
+                            self.authenticated = True
+                            return "Authentication Successfull for Admin"
+                        else:
+                            return "Invalid Admin Credentials"  # Username found but password wrong
+                return "Invalid Admin Credentials" #user name is not correct
+#After the authentication we need to catch the messages and the other options are only allowed if the self.authenticated = True
 #now we will do the sign up option which leads to new user creation and helps us to make the things correctly
 class SignUp(Authentication):
-    def __init__(self,new_user_name,new_passcode,email):
+    def __init__(self,new_user_name,new_passcode,email,admin = 1):
         self.username = new_user_name
         self.passcode = new_passcode
         #logic should be like after intialization ti should be like directly go into the sign_up section without pressing any thing from the user
         self.email = email
+        self.isadmin = admin
     def sign_in(self):
         pass
     def recovery_code(self):
@@ -70,24 +87,35 @@ class SignUp(Authentication):
         #first we need to check either the email is already registered or not
         #so load the file and check for the details
         currentdir = os.getcwd()
-        path = os.path.join(currentdir,"credentials.csv") 
-        with open(path,"r") as fd:
-            csvreader = csv.reader(fd)
-            header = next(csvreader)
-            for row in csvreader:
-                if row[3].strip() == self.email:
-                    return "Email already Registered"
-        #now if the email isn't registered we need to create means add the details inside the csv file
-        code = self.recovery_code()
-        with open(path,"a") as fd:
-            time = str(datetime.datetime.now())
-            csvwriter = csv.writer(fd)
-            csvwriter.writerow([time, self.username, self.passcode, self.email,code])
-        return "Account Successfully Created"
-def main():
-    #lets test the current code with the pseodo test cases
-    new_user = SignUp("vijaysai","1234vijay","kattamudivijaysai@gmail.com")
-    message = new_user.sign_up()
-    print(message)
-if __name__ == "__main__":
-    main()
+        if self.isadmin == 0:
+            path = os.path.join(currentdir,"credentials.csv") 
+            with open(path,"r") as fd:
+                csvreader = csv.reader(fd)
+                header = next(csvreader)
+                for row in csvreader:
+                        if row[3].strip() == self.email:
+                            return "Email already Registered"
+                #now if the email isn't registered we need to create means add the details inside the csv file
+                code = self.recovery_code()
+            with open(path,"a",newline= "") as fd:
+                time = str(datetime.datetime.now())
+                csvwriter = csv.writer(fd)
+                fd.write('\n')
+                csvwriter.writerow([time, self.username, self.passcode, self.email,code])
+            return "Account Successfully Created"
+        elif self.isadmin == 1:
+            path = os.path.join(currentdir,"admincred.csv")
+            with open(path,"r") as fd:
+                csvreader = csv.reader(fd)
+                header = next(csvreader)
+                for row in csvreader:
+                        if row[3].strip() == self.email:
+                            return "Admin already Registered"
+                #now if the email isn't registered we need to create means add the details inside the csv file
+                code = self.recovery_code()
+            with open(path,"a",newline= "") as fd:
+                time = str(datetime.datetime.now())
+                csvwriter = csv.writer(fd)
+                fd.write('\n')
+                csvwriter.writerow([time, self.username, self.passcode, self.email,code])
+            return "Account Successfully Created For New Admin"
