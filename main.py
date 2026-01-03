@@ -16,10 +16,10 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt")
+                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
-                    time.sleep(10)
-                    va1.videoanalysis()
+                    time.sleep(5)
+                    count = va1.videoanalysis()
                     print("Video Successfully Ended")
                 case "2":
                     print("Coming Soon....")
@@ -37,13 +37,13 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt")
+                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     print("Loading the Analytics....")
                     time.sleep(10)
-                    va1.videoanalysis()
+                    count = va1.videoanalysis()
                     time.sleep(5)
-                    print("Video Successfully Ended")
+                    print(f"Video ended. Final count: {count}")
                 case "2":
                     print("Coming Soon....")
                     time.sleep(10)
@@ -92,11 +92,11 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt")
+                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Concepts/Coding Concepts/14706612_1920_1080_60fps.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     time.sleep(10)
-                    va1.videoanalysis()
-                    print("Video Successfully Ended")
+                    count = va1.videoanalysis()
+                    print(f"Video ended. Final count: {count}")
                 case "2":
                     print("Coming Soon....")
                     time.sleep(10)
