@@ -1,6 +1,5 @@
 import cv2 as cv
 from ultralytics import YOLO
-import numpy as np
 import os
 import time
 import firebase_admin
@@ -42,67 +41,81 @@ class VideoAnalytics():
                 print("End of the Video")
                 break
             rescaled_frame = rescale(frame, scale = 0.4)
-            results = self.model(rescaled_frame,stream = True)
+            results = self.model(rescaled_frame,stream = True,verbose = False)
             
-            #counting the people
-            people_count = 0
+            #for counting the people implement this logic
+            current_frame_count = 0
 
             for result in results:
                 boxes = result.boxes
                 for box in boxes:
-                    #lets find the coordinates of each boxes
-                    x,y,w,h = box.xywh[0]
-                    x,y,w,h = float(x),float(y),float(w),float(h)
-                    #calcultae the top left and bottom right
-                    x1 = int(x - w/2)
-                    y1= int(y - h/2)
-                    x2 = int(x + w/2)
-                    y2 = int(y + h/2)
-                    #now lets draw a rectangle in order to find the people
-                    confidence = float(box.conf[0])
                     cls1 = int(box.cls[0])
+                    # If it is a person (class 0)
                     if cls1 == 0:
+                        current_frame_count += 1 # Increment the count
+                        
+                        # Get coordinates for drawing
+                        x, y, w, h = box.xywh[0]
+                        x1 = int(float(x) - float(w)/2)
+                        y1 = int(float(y) - float(h)/2)
+                        x2 = int(float(x) + float(w)/2)
+                        y2 = int(float(y) + float(h)/2)
+                        #drawing rectangle for people
                         cv.rectangle(rescaled_frame,(x1,y1),(x2,y2),(255,0,0),thickness = 1)
-                        cv.putText(rescaled_frame,f"{classObjects[cls1]} {confidence:.2f}",(max(0,x1), max(20,y1)), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,0), 1)
+                        cv.putText(rescaled_frame,f"{classObjects[cls1]}",(max(0,x1), max(20,y1)), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,0), 1)
             
             #adding the logic
             current_time = time.time()
             if current_time - last_update >= 5:
-                if firebase_admin._apps:
-                    # Determine suggestion based on count
-                    if people_count > 45:
-                        suggestion = "Very Crowded! Do not enter."
-                        status = "Crowded"
-                    elif people_count > 25:
-                        suggestion = "Moderately full. You might have to wait."
-                        status = "Moderate"
-                    else:
-                        suggestion = "Mess is free! Perfect time to eat."
-                        status = "Available"
-                    
-                    # Update Firebase with count and suggestion
+                #logic for status and color
+                suggestion = ""
+                status = ""
+                color_code = ""
+
+                if current_frame_count > 45:
+                    suggestion = "Very Crowded! Do not enter."
+                    status = "Crowded"
+                    color_code = "red"
+                elif current_frame_count > 25:
+                    suggestion = "Moderately full. You might have to wait."
+                    status = "Moderate"
+                    color_code = "orange"
+                else:
+                    suggestion = "Mess is free! Perfect time to eat."
+                    status = "Available"
+                    color_code = "green"
+                # Update Firebase
+                try:
                     ref = db.reference('mess_system')
                     ref.update({
                         'hall_1': {
                             'name': 'Main Mess',
-                            'count': people_count,
+                            'count': current_frame_count,
                             'status': status
                         },
                         'best_suggestion': {
-                            'message': suggestion
+                            'message': suggestion,
+                            'color': color_code
                         },
                         'last_updated': current_time
                     })
-                    
-                    # Print only when Firebase updates (no verbose frame output)
-                    print(f"📡 Firebase Updated | Count: {people_count} | Suggestion: {suggestion}")
-                
+                    print(f"📡 Firebase Updated | Count: {current_frame_count} | {status}")
+                except Exception as e:
+                    print(f"Firebase Error: {e}")
+
                 last_update = current_time
-            cv.imshow("People Video",rescaled_frame)
-            if cv.waitKey(10) & 0xFF == ord('d'):
+
+            # Show the real-time count on the screen
+            cv.putText(rescaled_frame, f"Live Count: {current_frame_count}", (20, 40), 
+                       cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            
+            cv.imshow("People Video", rescaled_frame)
+            
+            # Press 'd' to quit
+            if cv.waitKey(1) & 0xFF == ord('d'):
                 break
             #now after opening each and every frame we need to detect the people inside the frame and need to count the number of people inside the frame and show it as the output
             #using the yolo model to count the number of people in the frames
         cap.release()
         cv.destroyAllWindows()
-        return people_count
+        return current_frame_count
