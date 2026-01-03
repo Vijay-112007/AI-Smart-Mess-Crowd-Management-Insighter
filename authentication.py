@@ -12,8 +12,6 @@ class Authentication(ABC):
         pass
     def sign_up(self):
         pass
-    def options(self):
-        print(f"1. Login In \n 2. Sign Up")
 #the authentication class is abstract class whihc helps to prevent the options from the data insecurity it hides the data implementation
 #now for the sake of time we will store all the login credentials in a file after we will shift it to the firebase database
 #in this class we need to catch the return messages
@@ -52,7 +50,7 @@ class SignIn(Authentication):
                             return "Authentication Successfull"
                         else:
                             return "Incorrect Credentials"  # Username found but password wrong
-                return "Incorrect Credentials" #user name is not correct
+                    return "Incorrect Credentials" #user name is not correct
         elif self.isadmin == 1:
             path = os.path.join(currentdir,"admincred.csv")
             with open(path,"r") as fd:
