@@ -7,7 +7,7 @@
 .env.*.local
 
 # Service account keys
-serviceAccountKey.json
+newrulesimportant.json
 
 # Python
 __pycache__/
