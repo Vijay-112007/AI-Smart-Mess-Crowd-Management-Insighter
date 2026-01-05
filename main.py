@@ -20,7 +20,7 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage1.mp4",
                                         currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
@@ -44,7 +44,7 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage1.mp4",
                                         currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
@@ -73,7 +73,7 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage1.mp4",
                                         currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
@@ -105,7 +105,7 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage1.mp4",
                                         currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
