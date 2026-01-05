@@ -1,6 +1,9 @@
-from authentication import SignIn,SignUp
-from crowd import VideoAnalytics
+from src.authentication import SignIn,SignUp
+from src.crowd import VideoAnalytics
 import time
+import os
+
+
 def main():
     #first we will ask either to sign up or sign in
     choice = int(input("1. Sign Up\n2. Login In\nEnter Your Choice: "))
@@ -16,7 +19,8 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
+                    currentdir = os.getcwd()
+                    va1 = VideoAnalytics(currentdir + "assets/doorfootage.mp4",
                                         "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
