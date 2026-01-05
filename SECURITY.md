@@ -36,7 +36,7 @@
 - **GitHub Secrets**: Store credentials as repository secrets for GitHub Actions
 - **Google Secret Manager**: Use Google Cloud's Secret Manager for production environments
 - **Application Default Credentials**: When running on Google Cloud Platform, use ADC when possible
-- **Environment Variables**: Store credentials as base64-encoded environment variables
+- **Environment Variables**: Store the full JSON content or file path as environment variables
 
 ### If Credentials Are Exposed:
 
