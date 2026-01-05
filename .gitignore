@@ -1,0 +1,9 @@
+# Firebase Admin SDK credentials
+*firebase-adminsdk*.json
+mess-management-system-*-firebase-adminsdk-*.json
+
+# Environment and credential files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
