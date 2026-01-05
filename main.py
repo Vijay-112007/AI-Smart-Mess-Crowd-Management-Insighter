@@ -18,7 +18,7 @@ def main():
                 case "1":
                     va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
                                         "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
-                                        "mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json",
+                                        "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     time.sleep(5)
@@ -42,7 +42,7 @@ def main():
                 case "1":
                     va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
                                         "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
-                                        "mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json",
+                                        "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     print("Loading the Analytics....")
@@ -71,7 +71,7 @@ def main():
                 case "1":
                     va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
                                         "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
-                                        "mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json",
+                                        "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     print("Loading the Analytics....")
@@ -101,7 +101,7 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","mess-management-system-1f313-firebase-adminsdk-fbsvc-9eecfa66a3.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
+                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","newrulesimportant.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     time.sleep(10)
                     count = va1.videoanalysis()
