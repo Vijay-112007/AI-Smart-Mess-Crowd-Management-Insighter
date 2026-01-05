@@ -36,7 +36,7 @@ def main():
             time.sleep(2)
             print(newadmin.sign_in())
             #we need to provide three options after login into the system
-            print("1. Crowd Analytics\n2.Start Generating QR code\n3.Food Insights\n4. Monthly Insights")
+            print("1.Crowd Analytics\n2.Start Generating QR code\n3.Food Insights\n4. Monthly Insights")
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
