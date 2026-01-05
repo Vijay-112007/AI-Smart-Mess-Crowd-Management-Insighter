@@ -37,7 +37,7 @@ class SignIn(Authentication):
         #first open the file
         currentdir = os.getcwd()
         if self.isadmin == 0:
-            path = os.path.join(currentdir,"credentials.csv")
+            path = os.path.join(currentdir,"data","credentials.csv")
             with open(path,"r") as fd:
                 csvreader = csv.reader(fd)
                 header = next(csvreader)
@@ -52,7 +52,7 @@ class SignIn(Authentication):
                             return "Incorrect Credentials"  # Username found but password wrong
                     return "Incorrect Credentials" #user name is not correct
         elif self.isadmin == 1:
-            path = os.path.join(currentdir,"admincred.csv")
+            path = os.path.join(currentdir,"data","admincred.csv")
             with open(path,"r") as fd:
                 csvreader = csv.reader(fd)
                 header = next(csvreader)
@@ -96,7 +96,7 @@ class SignUp(Authentication):
         #so load the file and check for the details
         currentdir = os.getcwd()
         if self.isadmin == 0:
-            path = os.path.join(currentdir,"credentials.csv") 
+            path = os.path.join(currentdir,"data","credentials.csv") 
             with open(path,"r") as fd:
                 csvreader = csv.reader(fd)
                 header = next(csvreader)
@@ -112,7 +112,7 @@ class SignUp(Authentication):
                 csvwriter.writerow([time, self.username, self.passcode, self.email,code])
             return "Account Successfully Created"
         elif self.isadmin == 1:
-            path = os.path.join(currentdir,"admincred.csv")
+            path = os.path.join(currentdir,"data","admincred.csv")
             with open(path,"r") as fd:
                 csvreader = csv.reader(fd)
                 header = next(csvreader)

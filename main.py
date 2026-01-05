@@ -6,6 +6,7 @@ import os
 
 def main():
     #first we will ask either to sign up or sign in
+    currentdir = os.getcwd()
     choice = int(input("1. Sign Up\n2. Login In\nEnter Your Choice: "))
     if choice == 1:
         choice1 = int(input("1.Sign Up as Admin\n2.Sign Up as User\nEnter Your Choice: "))
@@ -19,9 +20,8 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    currentdir = os.getcwd()
-                    va1 = VideoAnalytics(currentdir + "assets/doorfootage.mp4",
-                                        "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                                        currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
@@ -44,8 +44,8 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
-                                        "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                                        currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
@@ -73,8 +73,8 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4",
-                                        "C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt",
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                                        currentdir + "/assets/yolov8n.pt",
                                         "newrulesimportant.json",
                                         "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
@@ -105,7 +105,10 @@ def main():
             choice2 = input("Enter Your Choice: ")
             match(choice2):
                 case "1":
-                    va1 = VideoAnalytics("C:/Users/vijay/OneDrive/Desktop/VS CODING/Python/AI_Mess_Crowd_Management/AI-Smart-Mess-Crowd-Management-Insighter/doorfootage.mp4","C:/Users/vijay/OneDrive/Concepts/Coding Concepts/YoloWeights/yolov8n.pt","newrulesimportant.json","https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
+                    va1 = VideoAnalytics(currentdir + "/assets/doorfootage.mp4",
+                                        currentdir + "/assets/yolov8n.pt",
+                                        "newrulesimportant.json",
+                                        "https://mess-management-system-1f313-default-rtdb.firebaseio.com/")
                     print("Press \"D\" to Stop the Video")
                     time.sleep(10)
                     count = va1.videoanalysis()
