@@ -1,30 +1,28 @@
 import smtplib
+import random
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from google import genai
-import random
+from google.genai import types
 
-# =========================
-# GEMINI CLIENT
-# =========================
-client = genai.Client(api_key="AIzaSyCKMhXE0Af3_cel6joCT0SkOHIU2qm-naQ")
 
-# =========================
-# AI MESSAGE FUNCTION
-# =========================
-styles = [
-    "very casual and fun",
-    "friendly and polite",
-    "short and energetic",
-    "warm and appreciative",
-    "cool and playful"
-]
+# ================== AI MESSAGE GENERATOR ==================
 
-def ai_write_body(name, meal):
-    try:
-        style = random.choice(styles)
+class AIMessageGenerator:
+    def __init__(self, api_key):
+        self.client = genai.Client(api_key=api_key)
+        self.styles = [
+            "very casual and fun",
+            "friendly and polite",
+            "short and energetic",
+            "warm and appreciative"
+        ]
 
-        prompt = f"""
+    def generate(self, name, meal):
+        try:
+            style = random.choice(self.styles)
+
+            prompt = f"""
 Write a short, friendly email reminder for a college student.
 
 Student name: {name}
@@ -38,63 +36,100 @@ Instructions:
 
 Style rules:
 - 2-3 lines only
-- Use emojis naturally
+- Use 1-2 emojis naturally
 """
 
-        response = client.models.generate_content(
-            model="models/gemini-pro-latest",
-            contents=prompt,
-            config={
-                "temperature": 0.9,
-                "top_p": 0.95
-            }
-        )
+            response = self.client.models.generate_content(model="models/gemini-pro-latest",
+                                contents=prompt,
+                                config=types.GenerateContentConfig(
+                                       temperature=0.9,
+                                        top_p=0.95,)
+                                                           )
 
-        return response.text.strip()
+            return response.text.strip()
 
-    except Exception as e:
-        print("⚠️ AI failed, using fallback:", e)
-        return f"Hey {name}! 🍽️ Please scan the QR code and share your {meal} feedback 😊"
+        except Exception:
+            return f"Hey {name}! 🍽️ Please scan the QR code and share your feedback 😊"
 
-# =========================
-# EMAIL CONFIG
-# =========================
+
+# ================== EMAIL SENDER ==================
+
+class EmailSender:
+    def __init__(self, sender_email, app_password):
+        self.sender_email = sender_email
+        self.app_password = app_password
+        self.server = smtplib.SMTP("smtp.gmail.com", 587)
+        self.server.starttls()
+
+    def login(self):
+        self.server.login(self.sender_email, self.app_password)
+
+    def send(self, to_email, subject, body):
+        msg = MIMEMultipart()
+        msg["From"] = self.sender_email
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+        self.server.sendmail(self.sender_email, to_email, msg.as_string())
+
+    def close(self):
+        self.server.quit()
+
+
+# ================== MAIN NOTIFIER ==================
+
+class MessFeedbackNotifier:
+    def __init__(self, ai_generator, email_sender, meal_name):
+        self.ai_generator = ai_generator
+        self.email_sender = email_sender
+        self.meal_name = meal_name
+
+    def notify_students(self, students):
+        for student in students:
+            message = self.ai_generator.generate(
+                student["name"],
+                self.meal_name
+            )
+
+            subject = f"🍽️ Mess Food Feedback – {self.meal_name}"
+
+            self.email_sender.send(
+                student["email"],
+                subject,
+                message
+            )
+
+
+# ================== CONFIG ==================
+
+GEMINI_API_KEY = "AIzaSyCKMhXE0Af3_cel6joCT0SkOHIU2qm-naQ"
 SENDER_EMAIL = "dsalaar98@gmail.com"
 APP_PASSWORD = "skul mfth bvcx pvae"
-MEAL_TYPE = "Lunch"
+MEAL_TY = "Today's Meal"
 
 students = [
-    {"name": "Tejesh", "email": "tejesh6414@gmail.com"},
-    {"name": "IYKY", "email": "nagabhusanam63@gmail.com"}
+    {"name": "MIKE", "email": "tejesh6414@gmail.com"},
+    {"name": "EL", "email": "nagabhusanam63@gmail.com"}
 ]
 
-# =========================
-# SEND EMAILS
-# =========================
-server = smtplib.SMTP("smtp.gmail.com", 587)
-server.starttls()
 
-try:
-    server.login(SENDER_EMAIL, APP_PASSWORD)
-    print("✅ Logged in to Gmail SMTP")
+# ================== RUN ==================
 
-    for student in students:
-        ai_message = ai_write_body(student["name"], MEAL_TYPE)
+if __name__ == "__main__":
+    ai_gen = AIMessageGenerator(GEMINI_API_KEY)
+    mailer = EmailSender(SENDER_EMAIL, APP_PASSWORD)
 
-        final_body = ai_message
+    try:
+        mailer.login()
+        print("✅ Logged in to Gmail")
 
-        msg = MIMEMultipart()
-        msg["From"] = SENDER_EMAIL
-        msg["To"] = student["email"]
-        msg["Subject"] = f"🍽️ Mess Food Feedback – {MEAL_TYPE}"
+        notifier = MessFeedbackNotifier(ai_gen, mailer, MEAL_TY)
+        notifier.notify_students(students)
 
-        msg.attach(MIMEText(final_body, "plain"))
-        server.sendmail(SENDER_EMAIL, student["email"], msg.as_string())
+        print("✅ All emails sent successfully")
 
-        print(f"📧 Email sent to {student['name']}")
+    except smtplib.SMTPAuthenticationError:
+        print("❌ Gmail authentication failed")
 
-    server.quit()
-    print("✅ All emails sent successfully")
-
-except smtplib.SMTPAuthenticationError:
-    print("❌ Gmail authentication failed")
+    finally:
+        mailer.close()
