@@ -15,10 +15,38 @@ class VideoAnalytics():
         self.classNames = self.model.names
         self.maskzone_x1 = None
         self.maskzone_x2 = None
+        self.total_count = 0
+        self.current_count = 0
+        self.suggestion = "Initializing...."
+        self.status = "Loading..."
+        self.color_code = "Gray"
+        self.last_updated_time = ""
         if firebase_cred_path and database_url:
             cred = credentials.Certificate(firebase_cred_path)
             firebase_admin.initialize_app(cred,{'databaseURL':database_url})
-    
+    def print_analytics_table(self):
+        # Move cursor to top and clear screen
+        print("\033[H\033[J", end="")
+        # Printing table
+        print("-" * 75)
+        print(" " * 20 + "🍽️  MESS CROWD ANALYTICS" + " " * 20)
+        print("-" * 75)
+        print()
+        print("🤖 AI SUGGESTION:")
+        print(f"     {self.suggestion}")
+        print()
+        print("-" * 75)
+        print()
+        print("📊 CROWD ANALYTICS:")
+        print(f"     |_ Current Count (Live):  {self.current_count} people")
+        print(f"     |_ Total Count (Peak):     {self.total_count} people")
+        print(f"     |_ Status:                 {self.status}")
+        print(f"     |_ Last Updated:           {self.last_updated_time}")
+        print(f"     |_Intensity:               {self.color_code}")
+        print()
+        print("-" * 75)
+        print("\n  Press 'd' on video window to quit", end="", flush=True)
+    ##
     def videoanalysis(self):
         cap = cv.VideoCapture(self.path)
 
@@ -30,6 +58,7 @@ class VideoAnalytics():
 
         start_time = time.time()
         last_update = start_time
+        last_table_update = start_time
 
         while cap.isOpened():
             isTrue, frame = cap.read()
@@ -68,62 +97,65 @@ class VideoAnalytics():
                         x2 = int(float(x) + float(w)/2)
                         y2 = int(float(y) + float(h)/2)
                         #drawing rectangle for people
-                        if x1 > self.maskzone_x2:
+                        if self.maskzone_x2 is None or x1 > self.maskzone_x2:
                             cv.rectangle(rescaled_frame,(x1,y1),(x2,y2),(255,0,0),thickness = 1)
                             cv.putText(rescaled_frame,f"{self.classNames[cls1]}",(max(0,x1), max(20,y1)), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,0), 1)
             
-            #adding the logic
+            #updates the counts
+            self.current_count = current_frame_count
+            if current_frame_count > self.total_count:
+                self.total_count = current_frame_count
             current_time = time.time()
+
+            #updates the firebase every 5 secondsd
             if current_time - last_update >= 5:
-                #logic for status and color
-                suggestion = ""
-                status = ""
-                color_code = ""
-
-                if current_frame_count > 45:
-                    suggestion = "Very Crowded! Do not enter."
-                    status = "Crowded"
-                    color_code = "red"
-                elif current_frame_count > 25:
-                    suggestion = "Moderately full. You might have to wait."
-                    status = "Moderate"
-                    color_code = "orange"
+                if current_frame_count > 20:
+                    self.suggestion = "Very Crowded! Do not enter."
+                    self.status = "Crowded"
+                    self.color_code = "red"
+                elif current_frame_count > 10:
+                    self.suggestion = "Moderately full. You might have to wait."
+                    self.status = "Moderate"
+                    self.color_code = "orange"
                 else:
-                    suggestion = "Mess is free! Perfect time to eat."
-                    status = "Available"
-                    color_code = "green"
-                # Update Firebase
+                    self.suggestion = "Mess is free! Perfect time to eat."
+                    self.status = "Available"
+                    self.color_code = "green"
                 try:
-                    ref = db.reference('mess_system')
+                    ref = db.reference("Mess-System")
                     ref.update({
-                        'hall_1': {
-                            'name': 'Main Mess',
+                        "hall-1":{
+                            'name' : "Main Mess",
                             'count': current_frame_count,
-                            'status': status
+                            'status':self.status
                         },
-                        'best_suggestion': {
-                            'message': suggestion,
-                            'color': color_code
+                        'best_suggestion':{
+                            'message':self.suggestion,
+                            'color':self.color_code
                         },
-                        'last_updated': current_time
+                        'last_updated':current_time
                     })
-                    print(f"📡 Firebase Updated | Count: {current_frame_count} | {status}")
                 except Exception as e:
-                    print(f"Firebase Error: {e}")
-
+                    print("Failed to Update the Data Base")
+                self.last_updated_time = time.strftime("%H:%M:%S",time.localtime(current_time))
                 last_update = current_time
-
-            # Show the real-time count on the screen
+            if current_time - last_table_update >= 5:
+                self.print_analytics_table()
+                last_table_update = current_time
+            
             cv.putText(rescaled_frame, f"Live Count: {current_frame_count}", (20, 40), 
-                       cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                      cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             
             cv.imshow("People Video", rescaled_frame)
             
-            # Press 'd' to quit
             if cv.waitKey(1) & 0xFF == ord('d'):
                 break
-            #now after opening each and every frame we need to detect the people inside the frame and need to count the number of people inside the frame and show it as the output
-            #using the yolo model to count the number of people in the frames
         cap.release()
         cv.destroyAllWindows()
-        return current_frame_count
+        #Showing the final table
+        print("\n\n" + "=" * 75)
+        print(" " * 25 + "FINAL ANALYTICS")
+        print("=" * 75)
+        self.print_analytics_table()
+        
+        return self.total_count
