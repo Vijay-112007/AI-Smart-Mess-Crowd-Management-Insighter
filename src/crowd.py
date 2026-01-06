@@ -6,18 +6,15 @@ from firebase_admin import credentials,db
 
 
 #first we need to import the video and then define a class which takes the video and then helps us to analyze the video
-classObjects = ["person","bicycle","car","motorcycle"]
-def rescale(frame,scale = .5):
-    #first we will rescale the frames inside the video and then we will make the analysis of the video
-    width = int(frame.shape[1] * scale)
-    height = int(frame.shape[0] * scale)
-    dimensions = (width,height)
-    return cv.resize(frame,dimensions,interpolation = cv.INTER_CUBIC)
+def resize_to_standard(frame,width = 720,height = 640):
+    return cv.resize(frame,(width,height),interpolation = cv.INTER_AREA)
 class VideoAnalytics():
     def __init__(self,path,modelpath,firebase_cred_path = None,database_url = None):
         self.path = path
         self.model = YOLO(modelpath)
-
+        self.classNames = self.model.names
+        self.maskzone_x1 = None
+        self.maskzone_x2 = None
         if firebase_cred_path and database_url:
             cred = credentials.Certificate(firebase_cred_path)
             firebase_admin.initialize_app(cred,{'databaseURL':database_url})
@@ -39,7 +36,7 @@ class VideoAnalytics():
             if not isTrue:
                 print("End of the Video")
                 break
-            rescaled_frame = rescale(frame, scale = 0.4)
+            rescaled_frame = resize_to_standard(frame)
             results = self.model(rescaled_frame,stream = True,verbose = False)
             
             #for counting the people implement this logic
@@ -47,10 +44,21 @@ class VideoAnalytics():
 
             for result in results:
                 boxes = result.boxes
+                # in order make up the mask area to avoid detection of food servents etc like the cam should be also perfect and changes can be done later
                 for box in boxes:
+                    cls = int(box.cls[0])
+                    conf = box.conf[0] * 100
+                    if self.classNames[cls] == 'bowl' or self.classNames[cls] == 'spoon' and conf > 10:
+                        x,y,w,h = box.xywh[0]
+                        self.maskzone_x1 = int(x-w//2)
+                        self.maskzone_x2 = int(x+w//2)
+                        #if maskzone is found 
+                        break
+                for box in boxes: 
                     cls1 = int(box.cls[0])
+                    conf = box.conf[0] * 100
                     # If it is a person (class 0)
-                    if cls1 == 0:
+                    if self.classNames[cls1] == 'person' and conf > 10:
                         current_frame_count += 1 # Increment the count
                         
                         # Get coordinates for drawing
@@ -60,8 +68,9 @@ class VideoAnalytics():
                         x2 = int(float(x) + float(w)/2)
                         y2 = int(float(y) + float(h)/2)
                         #drawing rectangle for people
-                        cv.rectangle(rescaled_frame,(x1,y1),(x2,y2),(255,0,0),thickness = 1)
-                        cv.putText(rescaled_frame,f"{classObjects[cls1]}",(max(0,x1), max(20,y1)), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,0), 1)
+                        if x1 > self.maskzone_x2:
+                            cv.rectangle(rescaled_frame,(x1,y1),(x2,y2),(255,0,0),thickness = 1)
+                            cv.putText(rescaled_frame,f"{self.classNames[cls1]}",(max(0,x1), max(20,y1)), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,0), 1)
             
             #adding the logic
             current_time = time.time()
