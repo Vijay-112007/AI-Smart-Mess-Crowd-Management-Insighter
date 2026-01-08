@@ -93,7 +93,7 @@ def main():
             print("Signing In......")
             print(newuser.sign_in())
             #we need to provide three options after login into the system
-            print("1. Crowd Analytics\n2.Scan the QR\n3.Food Insights\n4.Exit")
+            print("1.Crowd Analytics\n2.Scan the QR\n3.Food Insights\n4.Exit")
             newuser.authenticated = True
             choice2 = input("Enter Your Choice: ")
             match(choice2):
