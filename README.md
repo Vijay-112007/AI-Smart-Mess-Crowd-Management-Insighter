@@ -349,7 +349,7 @@ The system provides intelligent recommendations based on crowd density:
 > - AI suggestion system
 
 **[📺 Watch Full Demo Video]**(.assets/Presentation Video.mp4)
-
+**Watch another video in the PPT** (for other feature which is not deployed)
 ---
 
 ## 🤝 Contributing
