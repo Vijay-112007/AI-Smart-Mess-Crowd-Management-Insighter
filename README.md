@@ -348,7 +348,9 @@ The system provides intelligent recommendations based on crowd density:
 > - Firebase database updates
 > - AI suggestion system
 
-**[📺 Watch Full Demo Video]**(./assets/Presentation Video.mp4)
+**[📺 Watch Full Demo Video]**
+***(./assets/Presentation Video.mp4)***
+***(Download the Raw File in order to get as MP4 file or else open with MP4)***
 **Watch another video in the PPT** (for other feature which is not deployed)
 ![System Dashboard](./assets/screenshot.png)
 *Figure: Real-time crowd analytics dashboard*
