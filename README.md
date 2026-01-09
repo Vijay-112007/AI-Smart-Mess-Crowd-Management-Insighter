@@ -350,6 +350,8 @@ The system provides intelligent recommendations based on crowd density:
 
 **[📺 Watch Full Demo Video]**(.assets/Presentation Video.mp4)
 **Watch another video in the PPT** (for other feature which is not deployed)
+![System Dashboard](./assets/screenshot.png)
+*Figure: Real-time crowd analytics dashboard*
 ---
 
 ## 🤝 Contributing
