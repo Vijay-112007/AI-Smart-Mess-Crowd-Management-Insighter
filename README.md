@@ -397,3 +397,6 @@ For queries, issues, or collaboration opportunities:
 ⭐ **Star this repo if you find it useful!** ⭐
 
 </div>
+
+<p>This is our First Hackathon Project, we don't know any instructions or guidance to do. Learnt lot of things from our mistakes and really enjoyed and vibed during the code development . Thanking the GDG for giving this opportunity and brought such a friendly hackathon.
+</p>
